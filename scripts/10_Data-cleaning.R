@@ -59,6 +59,10 @@ raabs_612 <- raabs_612 %>% mutate(
   )
 )
 
+# Palestine DR module
+# The following participants have complete core RAAB data but missing DR module retinopathy and maculopathy grades for both right and left eyes
+# "1032-17" "1008-17" "1021-02" "1027-29" "1014-24" "1014-22" "1014-23" "1009-01" "1034-09" "1034-07" "1034-03" "1036-03" "1004-04" "1003-02" "1119-14" "1001-23"
+
 # 2019_Cambodia
 cam_review <- raabs_612 %>% filter(
   raab_id=="2019_Cambodia" & exam_status=="exam_status_examined" & (is.na(right_distance_acuity_presenting) | is.na(left_distance_acuity_presenting))

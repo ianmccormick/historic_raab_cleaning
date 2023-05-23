@@ -24,9 +24,9 @@ raab5_sur_data$noblood[!(raab5_sur_data$raab_id %in% raab5_dr)] <- NA
 # replace NA with FALSE in RAAB+DRs where FALSE has been left blank among examined
 raab5_sur_data <- raab5_sur_data %>% 
   mutate(
-  noblood = case_when((raab_id %in% raab5_dr & status==1 & is.na(noblood) ~ "false"),
-                      raab_id %in% raab5_dr & status==1 & noblood==TRUE ~ "true",
-                      raab_id %in% raab5_dr & status==1 & noblood==FALSE ~ "false",
+  noblood = case_when((raab_id %in% raab5_dr & status==1 & is.na(noblood) ~ "true"),
+                      raab_id %in% raab5_dr & status==1 & noblood==TRUE ~ "false",
+                      raab_id %in% raab5_dr & status==1 & noblood==FALSE ~ "true",
                       raab_id %in% raab5_dr & status!=1 ~ NA)
 )
 
@@ -77,9 +77,9 @@ raab6_sur_data$noblood[!(raab6_sur_data$raab_id %in% raab6_dr)] <- NA
 # replace NA with FALSE in RAAB+DRs where FALSE has been left blank among examined
 raab6_sur_data <- raab6_sur_data %>% 
   mutate(
-    noblood = case_when((raab_id %in% raab6_dr & status==1 & is.na(noblood) ~ "false"),
-                        raab_id %in% raab6_dr & status==1 & noblood==TRUE ~ "true",
-                        raab_id %in% raab6_dr & status==1 & noblood==FALSE ~ "false",
+    noblood = case_when((raab_id %in% raab6_dr & status==1 & is.na(noblood) ~ "true"),
+                        raab_id %in% raab6_dr & status==1 & noblood==TRUE ~ "false",
+                        raab_id %in% raab6_dr & status==1 & noblood==FALSE ~ "true",
                         raab_id %in% raab6_dr & status!=1 ~ NA)
   )
 
