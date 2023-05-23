@@ -2,7 +2,7 @@
 
 #RAAB7s exported from Peek platform - see email from VH 09 Feb 2022 for more information on Peek investigation
 
-# raabs_612 <- read.csv(here('outputs', 'raabs_612.csv'))
+raabs_612 <- read.csv(here('outputs', 'raabs_612.csv'))
 
 # Exam status in 2019_Nepal_Karnali
 # This was a RAAB7 database/ syncing error investigated by VH. 10 encounters did not have an exam status recorded, 2 were unavailable, among the other 8 there are other missing data points so droppoing them
@@ -118,14 +118,16 @@ np2_review <- raabs_612 %>% filter(
 # Principal cause missing n=1, both eyes 6/12
 raabs_612 <- raabs_612 %>% mutate(
   poor_vision_cause_principle = case_when(
-  participantId=="12117-31" ~ "poor_vision_cause_not_examined"),
+  participantId=="12117-31" ~ "poor_vision_cause_not_examined",
   TRUE ~ poor_vision_cause_principle
+)
 )
 # Left eye cause missing n=1, left eye 6/12
 raabs_612 <- raabs_612 %>% mutate(
   poor_vision_cause_left = case_when(
-    participantId=="12005-33" ~ "poor_vision_cause_not_examined"),
+    participantId=="12005-33" ~ "poor_vision_cause_not_examined",
   TRUE ~ poor_vision_cause_left
+)
 )
 
 # 2018_Palestine
