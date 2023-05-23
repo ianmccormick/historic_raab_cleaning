@@ -324,6 +324,13 @@ mutate(gbd_superreg = fct_recode(gbd_superreg,
                                          "dr_diabetic_treatment_other" = "6"
   )) %>%
   
+  mutate(dr_diabetic_last_exam = fct_recode(dr_diabetic_last_exam,
+                                            "dr_diabetic_last_exam_none" = "1",
+                                            "dr_diabetic_last_exam_0_12_months" = "2",
+                                            "dr_diabetic_last_exam_13_24_months" = "3",
+                                            "dr_diabetic_last_exam_over_24_months" = "4"
+  )) %>%
+  
   mutate(
     across(c(dr_retinopathy_method_right, dr_retinopathy_method_left),
            drmethod_recode
@@ -465,6 +472,13 @@ raab5_sur_data_newvarslevs <- read.csv(here('outputs', 'raab5_sur_data_newvars.c
                                             "dr_diabetic_treatment_insulin" = "4",
                                             "dr_diabetic_treatment_tablets_insulin" = "5",
                                             "dr_diabetic_treatment_other" = "6"
+  )) %>%
+  
+  mutate(dr_diabetic_last_exam = fct_recode(dr_diabetic_last_exam,
+                                            "dr_diabetic_last_exam_none" = "1",
+                                            "dr_diabetic_last_exam_0_12_months" = "2",
+                                            "dr_diabetic_last_exam_13_24_months" = "3",
+                                            "dr_diabetic_last_exam_over_24_months" = "4"
   )) %>%
   
   mutate(
