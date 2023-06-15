@@ -163,3 +163,32 @@ raabs_612 <- raabs_612 %>% filter(
 # 2021_Ethiopia_Oromia_Jimma
 
 write.csv(raabs_612, here('outputs', 'raabs_612.csv'), row.names = FALSE)
+
+# Liberia 2012
+# 18 additional observations with individual==0; one in cluster 0, 17 others are the 51st observation in their cluster so dropping all 18
+
+liberia_drops <- c(100000,
+                   103500,
+                   104100,
+                   104500,
+                   104000,
+                   107300,
+                   105500,
+                   105200,
+                   105300,
+                   103400,
+                   100500,
+                   103000,
+                   105400,
+                   105800,
+                   101200,
+                   101100,
+                   101300,
+                   106400)
+
+raabs_618 <- raabs_618 %>% filter(
+  !(raab_id=="2012_Liberia" & participantId %in% liberia_drops)
+)
+
+write.csv(raabs_618, here('outputs', 'raabs_618.csv'), row.names = FALSE)
+
