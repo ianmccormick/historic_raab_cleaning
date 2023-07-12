@@ -9,18 +9,22 @@ library(readxl)
 
 raab5 <- read.csv(here('outputs', 'raabs_618.csv'))
 raab6 <- read.csv(here('outputs', 'raabs_612.csv'))
+
+# Match participantId var types
+raab5$participantId <- as.character(raab5$participantId)
+
 raabs_all <- bind_rows('raab5' = raab5, 'raab6' = raab6, .id = "version")
 
-# match id formatting to raab_log_v5
-raabs_all$raab_id<-gsub("\\.","_",raabs_all$raab_id)
-raabs_all$raab_id<-gsub("\\ ","-",raabs_all$raab_id)
-raabs_all$raab_id<-gsub("\\_$","",raabs_all$raab_id)
-raabs_all$raab_id<-gsub("\\_$","",raabs_all$raab_id)
+# # match id formatting to raab_log_v5
+# raabs_all$raab_id<-gsub("\\.","_",raabs_all$raab_id)
+# raabs_all$raab_id<-gsub("\\ ","-",raabs_all$raab_id)
+# raabs_all$raab_id<-gsub("\\_$","",raabs_all$raab_id)
+# raabs_all$raab_id<-gsub("\\_$","",raabs_all$raab_id)
 # match id spelling
-raabs_all$raab_id<-gsub("\\,", "",raabs_all$raab_id)
-raabs_all$raab_id<-gsub("\\'", "",raabs_all$raab_id)
+# raabs_all$raab_id<-gsub("\\,", "",raabs_all$raab_id)
+# raabs_all$raab_id<-gsub("\\'", "",raabs_all$raab_id)
 # raabs_all$raab_id<-gsub("2019_Kyrgyzstan_North-east","2019_Kyrgyzstan_Northeast",raabs_all$raab_id)
-raabs_all$raab_id<-gsub("2007_Kenya_Embu","2007_Kenya_Eastern_Embu",raabs_all$raab_id)
+# raabs_all$raab_id<-gsub("2007_Kenya_Embu","2007_Kenya_Eastern_Embu",raabs_all$raab_id)
 # raabs_all$raab_id<-gsub("2016_Timor-Leste","2016_TimorLeste",raabs_all$raab_id)
 
 # limit length of id name (Malawi and Malaysia KL)
@@ -30,7 +34,7 @@ raabs_all_ids <- as.data.frame(unique(raabs_all$raab_id))
 
 # raab_log_v5 access status
 
-meta<-read_xlsx(here("raab-log_v5.xlsx"))
+meta<-read.csv(here("data", "historic_meta.csv"))
 
 meta[meta=="NA"]<-NA
 meta<-meta[!is.na(meta$raab_id),]
@@ -66,26 +70,34 @@ check <- cbind(vleg_ids, list)
 # drop cols for file to share with VLEG
 
 raabs_vleg <- raabs_vleg %>% select(
-  -starts_with(c('surgery', 'dr', 'Diabetic'))
+  -starts_with(c('eye_history', 'dr', 'Diabetic', "wg_"))
 ) 
-raabs_vleg <- raabs_vleg %>% select(-'created', -'repeat.', -'latitude', -'longitude')
-raabs_vleg <- raabs_vleg %>% select(-'acuity_test_distance')
-raabs_vleg <- raabs_vleg %>% select(-'right_distance_acuity_uncorrected', -'left_distance_acuity_uncorrected')
 
-raabs_vleg <- raabs_vleg %>% mutate(
-  gbd_region = case_when(
-    gbd_region=='gbd1' ~ 'sea_ea_o',
-    gbd_region=='gbd2' ~ 'sa',
-    gbd_region=='gbd3' ~ 'ce_ee_ca',
-    gbd_region=='gbd4' ~ 'na_me',
-    gbd_region=='gbd5' ~ 'ssa',
-    gbd_region=='gbd6' ~ 'lac',
-    gbd_region=='gbd7' ~ 'hi'
-  )
-)
+# drop surgery cols except surgery_type that indicates if couching was done
+raabs_vleg <- raabs_vleg %>% select(-starts_with(c('surgery_none', 'surgery_age', 'surgery_place', 'surgery_cost', 'surgery_poor')))
+
+# raabs_vleg <- raabs_vleg %>% select(-'created', -'repeat.', -'latitude', -'longitude')
+# raabs_vleg <- raabs_vleg %>% select(-'acuity_test_distance')
+raabs_vleg <- raabs_vleg %>% select(-'right_distance_acuity_uncorrected', -'left_distance_acuity_uncorrected', -'right_distance_acuity_corrected', -'left_distance_acuity_corrected')
+
+# 30.06.23 dropping Liberia until the conversion is resolved
+raabs_vleg <- raabs_vleg %>% filter(raab_id!="2012_Liberia")
+
+
+# raabs_vleg <- raabs_vleg %>% mutate(
+#   gbd_region = case_when(
+#     gbd_region=='gbd1' ~ 'sea_ea_o',
+#     gbd_region=='gbd2' ~ 'sa',
+#     gbd_region=='gbd3' ~ 'ce_ee_ca',
+#     gbd_region=='gbd4' ~ 'na_me',
+#     gbd_region=='gbd5' ~ 'ssa',
+#     gbd_region=='gbd6' ~ 'lac',
+#     gbd_region=='gbd7' ~ 'hi'
+#   )
+# )
 
 # test gbd regions correct for countries
-regions <- raabs_vleg %>% group_by(country) %>% count(gbd_region)
+regions <- raabs_vleg %>% group_by(country) %>% count(gbd_superreg)
 
 # test hwo regions correct for countries
 regions_who <- vleg %>% group_by(level0) %>% count(who_reg)

@@ -3,7 +3,7 @@ library(here)
 
 # Read in an export of the Peek RAAB7 database - note survey and pop coming from different sources 02 May 2023
 # raab7 <- read.csv(here('data', 'peek-raab-export_230314', 'surveys.csv'))
-raab7 <- read.csv(here('data', 'peek-encounter-2023-05-02T13-25-survey.csv'))
+raab7 <- read.csv(here('data', 'peek-encounter-2023-07-12T11-23-survey.csv'))
 raab7_pop <- read.csv(here('data', 'peek-raab-export_230314', 'population.csv'))
 
 # Filter to early RAAB7s with PVA only
@@ -99,6 +99,22 @@ raab7pva_sur_data <- raab7pva_sur_data %>% mutate(
                                gbd_superreg=="gbd6" ~ "lac",
                                gbd_superreg=="gbd7" ~ "hi")
 )
+
+# Replace empty character values for dr_diabetes_blood_consent with NA values if DR module not done (NA required for DR_check in wrapper scripts)
+raab7pva_sur_data <- raab7pva_sur_data %>% mutate(
+  dr_diabetes_blood_consent = case_when(
+    dr_diabetes_blood_consent=="" ~ NA, TRUE ~ dr_diabetes_blood_consent
+  )
+)
+
+# Replace empty character values for wg_ with NA values if disability module not done (NA required for WG_check in wrapper scripts)
+raab7pva_sur_data <- raab7pva_sur_data %>% mutate(
+  across(starts_with("wg_"), ~case_when(
+    .=="" ~ NA_character_, TRUE ~ as.character(.)
+  )
+))
+
+
 
 # Write csv to merge with raabs_612.csv
 write.csv(raab7pva_sur_data, here('outputs', 'raab7pva_sur_data.csv'), row.names = FALSE)

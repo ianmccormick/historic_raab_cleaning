@@ -190,5 +190,7 @@ raabs_618 <- raabs_618 %>% filter(
   !(raab_id=="2012_Liberia" & participantId %in% liberia_drops)
 )
 
+# Aphakia and cataract causes swapped in order: original dataset from EJ 2=cataract and 3=aphakia
+
 write.csv(raabs_618, here('outputs', 'raabs_618.csv'), row.names = FALSE)
 
